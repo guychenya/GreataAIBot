@@ -21,6 +21,55 @@ const initializeClient = (provider, apiKey) => {
     case 'anthropic':
     case 'gemini':
     case 'ollama':
+      // Real Ollama implementation for local instance
+      return {
+        provider: providerLower,
+        apiKey,
+        baseUrl: apiKey || 'http://localhost:11434', // Use apiKey as base URL or default
+        chat: {
+          completions: async (params) => {
+            const baseUrl = apiKey || 'http://localhost:11434';
+            const url = `${baseUrl}/api/generate`;
+            
+            try {
+              const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  model: params.model || 'llama3',
+                  prompt: params.messages[params.messages.length - 1].content,
+                  stream: false,
+                  options: {
+                    temperature: params.temperature || 0.7,
+                    top_p: params.top_p || 0.9,
+                    num_predict: params.max_tokens || 1000,
+                  }
+                })
+              });
+
+              if (!response.ok) {
+                throw new Error(`Ollama API error: ${response.status} ${response.statusText}`);
+              }
+
+              const data = await response.json();
+              
+              return {
+                choices: [{
+                  message: {
+                    content: data.response || 'No response from Ollama'
+                  }
+                }]
+              };
+            } catch (error) {
+              console.error('Ollama API error:', error);
+              throw new Error(`Failed to connect to Ollama: ${error.message}`);
+            }
+          }
+        }
+      };
+      
     case 'groq':
     case 'mistral':
       // For demonstration, we'll just return a mock client
@@ -35,7 +84,6 @@ const initializeClient = (provider, apiKey) => {
               'openai': 1000,
               'anthropic': 1500,
               'gemini': 800,
-              'ollama': 600,
               'groq': 500,
               'mistral': 700
             }[providerLower] || 1000;
@@ -77,8 +125,31 @@ export const testApiConnection = async (provider, apiKey) => {
   try {
     const client = initializeClient(provider, apiKey);
     
-    // For demonstration purposes, we'll simulate a successful connection most of the time
-    // In a real implementation, you would make an actual API call to verify the connection
+    // For Ollama, test the actual connection
+    if (provider.toLowerCase() === 'ollama') {
+      const baseUrl = apiKey || 'http://localhost:11434';
+      const response = await fetch(`${baseUrl}/api/tags`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Ollama server not reachable at ${baseUrl}`);
+      }
+      
+      const data = await response.json();
+      const modelCount = data.models ? data.models.length : 0;
+      
+      return { 
+        success: true, 
+        message: `Connected to Ollama at ${baseUrl}. Found ${modelCount} models.`,
+        models: data.models || []
+      };
+    }
+    
+    // For other providers, simulate connection (to be implemented with real APIs later)
     const isSuccessful = Math.random() > 0.2;
     
     if (!isSuccessful) {
@@ -144,7 +215,7 @@ const getDefaultModel = (provider) => {
     'openai': 'gpt-4',
     'anthropic': 'claude-3-opus',
     'gemini': 'gemini-pro',
-    'ollama': 'llama3',
+    'ollama': 'llama3.2',
     'groq': 'llama3-70b-8192',
     'mistral': 'mistral-large'
   };

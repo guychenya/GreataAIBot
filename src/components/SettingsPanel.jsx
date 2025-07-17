@@ -15,7 +15,7 @@ const providers=[
   {id: 'openai',name: 'OpenAI',color: '#00a67e',description: 'For ChatGPT and GPT-4 models'},
   {id: 'anthropic',name: 'Anthropic',color: '#ff6b35',description: 'For Claude models'},
   {id: 'gemini',name: 'Gemini',color: '#4285f4',description: 'Google\'s AI models'},
-  {id: 'ollama',name: 'Ollama',color: '#7c3aed',description: 'Local open-source models'},
+  {id: 'ollama',name: 'Ollama',color: '#7c3aed',description: 'Local open-source models (http://localhost:11434)'},
   {id: 'groq',name: 'Groq',color: '#e84142',description: 'Fast inference API'},
   {id: 'mistral',name: 'Mistral',color: '#5f9ea0',description: 'Mistral AI models'},
   {id: 'supabase',name: 'Supabase',color: '#3ecf8e',description: 'Format: projectUrl|anonKey'}
@@ -610,12 +610,21 @@ const SettingsPanel=({onClose,isMainView=false})=> {
                             value={newApiKeyValue}
                             onChange={(e)=> setNewApiKeyValue(e.target.value)}
                             className="settings-input"
-                            placeholder={`Enter ${newApiKeyName || 'provider'} API Key`}
-                            required
+                            placeholder={
+                              newApiKeyName.toLowerCase() === 'ollama' 
+                                ? 'Enter Ollama server URL (optional, default: http://localhost:11434)'
+                                : `Enter ${newApiKeyName || 'provider'} API Key`
+                            }
+                            required={newApiKeyName.toLowerCase() !== 'ollama'}
                           />
                           {newApiKeyName.toLowerCase()==='supabase' && (
                             <div className="api-key-format-help">
                               Format: projectUrl|anonKey
+                            </div>
+                          )}
+                          {newApiKeyName.toLowerCase()==='ollama' && (
+                            <div className="api-key-format-help">
+                              Enter Ollama server URL (default: http://localhost:11434) or leave empty for default
                             </div>
                           )}
                         </div>
