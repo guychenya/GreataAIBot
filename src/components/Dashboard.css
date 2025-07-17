@@ -1,0 +1,298 @@
+.dashboard {
+  padding: 2rem;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.dashboard.in-panel {
+  padding: 1rem;
+}
+
+/* Enhanced Header Styles */
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.dashboard-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.dashboard-subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+/* Metrics Grid Layout */
+.metrics-grid {
+  display: grid;
+  gap: 2rem;
+}
+
+.metrics-section {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Metrics Row Layout */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+  align-items: center;
+}
+
+/* Progress Ring Enhancements */
+.progress-ring-container {
+  position: relative;
+  margin: 0 auto;
+}
+
+.progress-ring-content {
+  text-align: center;
+}
+
+.progress-ring-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0.5rem 0;
+}
+
+.progress-ring-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* Progress Bar Improvements */
+.progress-bar-container {
+  margin-bottom: 1.5rem;
+}
+
+.progress-bar-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.progress-bar-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  margin-right: 1rem;
+}
+
+.progress-bar-label-group {
+  flex: 1;
+}
+
+.progress-bar-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.progress-bar-value {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.progress-bar-track {
+  height: 8px;
+  background: var(--track-bg);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* Temperature Control Enhancements */
+.temperature-control-container {
+  background: var(--card-bg-soft);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.temperature-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.temperature-icon {
+  font-size: 1.25rem;
+  color: var(--accent);
+  margin-right: 0.75rem;
+}
+
+.temperature-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.temperature-slider-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.temperature-min,
+.temperature-max {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  width: 24px;
+  text-align: center;
+}
+
+.temperature-slider {
+  flex: 1;
+  height: 8px;
+  -webkit-appearance: none;
+  background: var(--track-bg);
+  border-radius: 4px;
+  outline: none;
+}
+
+.temperature-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--card-bg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.temperature-value {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 48px;
+  text-align: center;
+  padding: 0.25rem 0.5rem;
+  background: var(--card-bg-soft);
+  border-radius: 6px;
+}
+
+/* Tooltip Styles */
+.metric-tooltip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.5rem;
+}
+
+.tooltip-icon {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  cursor: help;
+}
+
+.tooltip-text {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--tooltip-bg);
+  color: var(--tooltip-text);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  z-index: 10;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.metric-tooltip:hover .tooltip-text {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Theme-specific variables */
+.dashboard.dark {
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --card-bg: rgba(30, 41, 59, 0.7);
+  --card-bg-soft: rgba(30, 41, 59, 0.4);
+  --track-bg: rgba(51, 65, 85, 0.5);
+  --accent: #3b82f6;
+  --accent-soft: rgba(59, 130, 246, 0.2);
+  --tooltip-bg: rgba(15, 23, 42, 0.95);
+  --tooltip-text: rgba(255, 255, 255, 0.9);
+}
+
+.dashboard.light {
+  --text-primary: rgba(15, 23, 42, 0.95);
+  --text-secondary: rgba(15, 23, 42, 0.6);
+  --card-bg: rgba(248, 250, 252, 0.8);
+  --card-bg-soft: rgba(248, 250, 252, 0.6);
+  --track-bg: rgba(203, 213, 225, 0.5);
+  --accent: #2563eb;
+  --accent-soft: rgba(37, 99, 235, 0.1);
+  --tooltip-bg: rgba(248, 250, 252, 0.95);
+  --tooltip-text: rgba(15, 23, 42, 0.9);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 1rem;
+  }
+  
+  .metrics-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .dashboard-title {
+    font-size: 1.5rem;
+  }
+  
+  .section-title {
+    font-size: 1.125rem;
+  }
+  
+  .progress-ring-value {
+    font-size: 1.75rem;
+  }
+  
+  .temperature-slider-container {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .temperature-min,
+  .temperature-max {
+    width: auto;
+  }
+}
