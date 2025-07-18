@@ -1,6 +1,6 @@
 [build]
-  command = "cp public/index-direct.html public/index.html"
-  publish = "public"
+  command = "npm ci && npm run build"
+  publish = "dist"
 
 [build.environment]
   NODE_VERSION = "18"
