@@ -1,17 +1,20 @@
-import { StrictMode } from 'react';
+import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App-exact-replica.jsx';
 
 function initializeApp() {
   try {
-    console.log('🚀 Initializing Original GreataAI Bot...');
+    console.log('🚀 Initializing GreataAI Bot Exact Replica...');
+    console.log('Environment:', window.location.href);
+    console.log('User Agent:', navigator.userAgent);
     
     const rootElement = document.getElementById('root');
     if (!rootElement) {
       throw new Error('Root element not found');
     }
     
-    console.log('✅ Root element found, rendering original app...');
+    console.log('✅ Root element found, rendering app...');
+    console.log('React version:', React.version);
     
     const root = createRoot(rootElement);
     root.render(
@@ -20,7 +23,7 @@ function initializeApp() {
       </StrictMode>
     );
     
-    console.log('✅ Original GreataAI Bot loaded successfully!');
+    console.log('✅ GreataAI Bot Exact Replica loaded successfully!');
     
   } catch (error) {
     console.error('❌ Error rendering original app:', error);
