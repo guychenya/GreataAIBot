@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreataAI Bot - Direct Load Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a202c;
+            color: #e2e8f0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: #2d3748;
+            border-right: 1px solid #4a5568;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #4a5568;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo h2 {
+            color: #4299e1;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .collapse-btn {
+            margin-left: auto;
+            background: none;
+            border: 1px solid #4a5568;
+            border-radius: 6px;
+            padding: 8px;
+            color: #a0aec0;
+            cursor: pointer;
+        }
+        
+        .new-chat-btn {
+            width: 100%;
+            background: #4299e1;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .search-container {
+            padding: 16px;
+        }
+        
+        .search-input {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+        
+        .search-input input {
+            width: 100%;
+            background: #1a202c;
+            border: 1px solid #4a5568;
+            border-radius: 6px;
+            padding: 10px 10px 10px 36px;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        
+        .model-selector {
+            padding: 0 16px 16px;
+        }
+        
+        .model-label {
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+            color: #a0aec0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .model-box {
+            background: #1a202c;
+            border: 1px solid #4a5568;
+            border-radius: 6px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .model-icon {
+            width: 24px;
+            height: 24px;
+            background: #fbbf24;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: #2d3748;
+            border-bottom: 1px solid #4a5568;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-tabs {
+            display: flex;
+            background: #1a202c;
+            border-radius: 8px;
+            padding: 4px;
+        }
+        
+        .tab-btn {
+            background: #4299e1;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .header-btn {
+            background: none;
+            border: none;
+            color: #a0aec0;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .settings-btn {
+            background: #4299e1;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            background: #1a202c;
+        }
+        
+        .message {
+            margin-bottom: 24px;
+        }
+        
+        .message-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #10b981;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .message-content {
+            flex: 1;
+        }
+        
+        .message-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .username {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .timestamp {
+            color: #a0aec0;
+            font-size: 0.8rem;
+        }
+        
+        .message-bubble {
+            background: #2d3748;
+            border-radius: 12px;
+            padding: 16px;
+            color: #e2e8f0;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+        
+        .message-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .action-btn {
+            background: none;
+            border: 1px solid #4a5568;
+            border-radius: 6px;
+            padding: 6px 8px;
+            color: #a0aec0;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .input-area {
+            background: #2d3748;
+            border-top: 1px solid #4a5568;
+            padding: 20px;
+        }
+        
+        .input-container {
+            display: flex;
+            align-items: center;
+            background: #1a202c;
+            border-radius: 12px;
+            padding: 4px;
+            border: 1px solid #4a5568;
+        }
+        
+        .input-btn {
+            background: none;
+            border: none;
+            padding: 12px;
+            color: #a0aec0;
+            cursor: pointer;
+        }
+        
+        .message-input {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 12px 8px;
+            color: #e2e8f0;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        .disclaimer {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 0.8rem;
+            color: #a0aec0;
+        }
+        
+        .conversation-item {
+            background: #4299e1;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        
+        .conversation-item.inactive {
+            background: #2d3748;
+        }
+        
+        .conversation-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        
+        .conversation-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .conversation-date {
+            font-size: 0.8rem;
+            color: #bee3f8;
+        }
+        
+        .conversation-item.inactive .conversation-date {
+            color: #a0aec0;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <h2>AI Assistant</h2>
+                    <button class="collapse-btn">&lt;</button>
+                </div>
+                <button class="new-chat-btn">
+                    <span>+</span> New Chat
+                </button>
+            </div>
+            
+            <div class="search-container">
+                <div class="search-input">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="Search conversations...">
+                </div>
+            </div>
+            
+            <div class="model-selector">
+                <div class="model-label">AI MODEL</div>
+                <div class="model-box">
+                    <div class="model-icon">⚠</div>
+                    <div style="flex: 1;">
+                        <div style="font-size: 0.9rem; font-weight: 500;">GPT-4</div>
+                        <div style="font-size: 0.8rem; color: #a0aec0;">OpenAI</div>
+                    </div>
+                    <span style="color: #a0aec0;">▼</span>
+                </div>
+            </div>
+            
+            <div style="flex: 1; padding: 0 16px;">
+                <div class="conversation-item">
+                    <div class="conversation-meta">
+                        <span>💬</span>
+                        <span class="conversation-title">Welcome Chat</span>
+                    </div>
+                    <div class="conversation-date">Today</div>
+                </div>
+                
+                <div class="conversation-item inactive">
+                    <div class="conversation-meta">
+                        <span>💬</span>
+                        <span class="conversation-title">New Chat</span>
+                    </div>
+                    <div class="conversation-date">Today</div>
+                </div>
+                
+                <div class="conversation-item inactive">
+                    <div class="conversation-meta">
+                        <span>💬</span>
+                        <span class="conversation-title">Key KPIs for your dashboa...</span>
+                    </div>
+                    <div class="conversation-date">Today</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <div></div>
+                
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div class="header-tabs">
+                        <button class="tab-btn">💬 Chat</button>
+                    </div>
+                    
+                    <div class="header-actions">
+                        <button class="header-btn">📊 Dashboard</button>
+                        <button class="settings-btn">⚙️ Settings</button>
+                        <button class="header-btn">☀️</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-area">
+                <div class="message">
+                    <div class="message-header">
+                        <div class="avatar">AI</div>
+                        <div class="message-content">
+                            <div class="message-meta">
+                                <span class="username">AI Assistant</span>
+                                <span class="timestamp">02:16 PM</span>
+                            </div>
+                            <div class="message-bubble">Welcome to AI Assistant
+
+I'm your AI assistant, designed to help you with a variety of tasks. Here are some things I can do for you:
+
+• Answer questions and provide information
+• Help with writing and creative tasks
+• Assist with code and programming
+• Analyze data and provide insights
+
+How can I help you today?</div>
+                            <div class="message-actions">
+                                <button class="action-btn">👍</button>
+                                <button class="action-btn">👎</button>
+                                <button class="action-btn">📋</button>
+                                <button class="action-btn">🔄</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message">
+                    <div class="message-header">
+                        <div class="avatar" style="background: #4299e1;">Y</div>
+                        <div class="message-content">
+                            <div class="message-meta">
+                                <span class="username">You</span>
+                                <span class="timestamp">02:16 PM</span>
+                            </div>
+                            <div class="message-bubble">hello</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message">
+                    <div class="message-header">
+                        <div class="avatar">AI</div>
+                        <div class="message-content">
+                            <div class="message-meta">
+                                <span class="username">AI Assistant</span>
+                                <span class="timestamp">02:16 PM</span>
+                            </div>
+                            <div class="message-bubble">Regarding Your Question
+
+You asked: "hello"
+
+Analysis
+
+This is a simulated AI response. In a real implementation, this would connect to an actual AI model API that would generate a thoughtful and helpful response based on your input.</div>
+                            <div class="message-actions">
+                                <button class="action-btn">👍</button>
+                                <button class="action-btn">👎</button>
+                                <button class="action-btn">📋</button>
+                                <button class="action-btn">🔄</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-area">
+                <div class="input-container">
+                    <button class="input-btn">📎</button>
+                    <input type="text" class="message-input" placeholder="Type your message...">
+                    <button class="input-btn">🎤</button>
+                </div>
+                <div class="disclaimer">AI can make mistakes. Consider checking important information.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('✅ Direct HTML GreataAI Bot loaded successfully!');
+        console.log('This is a static HTML recreation of the original interface');
+        
+        // Basic interactivity
+        document.querySelector('.message-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && this.value.trim()) {
+                const message = this.value.trim();
+                this.value = '';
+                
+                // Add user message
+                const chatArea = document.querySelector('.chat-area');
+                const userMessage = document.createElement('div');
+                userMessage.className = 'message';
+                userMessage.innerHTML = `
+                    <div class="message-header">
+                        <div class="avatar" style="background: #4299e1;">Y</div>
+                        <div class="message-content">
+                            <div class="message-meta">
+                                <span class="username">You</span>
+                                <span class="timestamp">${new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</span>
+                            </div>
+                            <div class="message-bubble">${message}</div>
+                        </div>
+                    </div>
+                `;
+                chatArea.appendChild(userMessage);
+                
+                // Add AI response after delay
+                setTimeout(() => {
+                    const aiMessage = document.createElement('div');
+                    aiMessage.className = 'message';
+                    aiMessage.innerHTML = `
+                        <div class="message-header">
+                            <div class="avatar">AI</div>
+                            <div class="message-content">
+                                <div class="message-meta">
+                                    <span class="username">AI Assistant</span>
+                                    <span class="timestamp">${new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</span>
+                                </div>
+                                <div class="message-bubble">Thank you for your message: "${message}"
+
+This is the original GreataAI Bot interface recreated in static HTML. The actual application would connect to AI providers like:
+
+• OpenAI (GPT-4)
+• Anthropic (Claude)  
+• Google Gemini
+• Ollama (Local models)
+• Groq, Mistral, and more
+
+The full React application is being debugged for deployment.</div>
+                                <div class="message-actions">
+                                    <button class="action-btn">👍</button>
+                                    <button class="action-btn">👎</button>
+                                    <button class="action-btn">📋</button>
+                                    <button class="action-btn">🔄</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    chatArea.appendChild(aiMessage);
+                    chatArea.scrollTop = chatArea.scrollHeight;
+                }, 1000);
+                
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+        });
+        
+        // Settings button
+        document.querySelector('.settings-btn').addEventListener('click', function() {
+            alert('Settings panel would open here in the full React application.\n\nFeatures include:\n• API key management for all providers\n• Theme customization\n• Model parameters (temperature, tokens, etc.)\n• Notifications and privacy settings\n• Advanced configuration options');
+        });
+        
+        // New chat button
+        document.querySelector('.new-chat-btn').addEventListener('click', function() {
+            document.querySelector('.chat-area').innerHTML = `
+                <div class="message">
+                    <div class="message-header">
+                        <div class="avatar">AI</div>
+                        <div class="message-content">
+                            <div class="message-meta">
+                                <span class="username">AI Assistant</span>
+                                <span class="timestamp">${new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</span>
+                            </div>
+                            <div class="message-bubble">Hello! I'm ready to assist you. What would you like to talk about?</div>
+                            <div class="message-actions">
+                                <button class="action-btn">👍</button>
+                                <button class="action-btn">👎</button>
+                                <button class="action-btn">📋</button>
+                                <button class="action-btn">🔄</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
