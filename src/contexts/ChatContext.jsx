@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { saveConversations, loadConversations } from '../services/storageService';
+import { sendMessage } from '../services/apiService';
+import { useSettings } from './SettingsContext';
 
 const ChatContext = createContext();
 
@@ -12,6 +14,7 @@ export const useChat = () => {
 };
 
 export const ChatProvider = ({ children }) => {
+  const { settings } = useSettings();
   const [conversations, setConversations] = useState([]);
   const [activeConversationId, setActiveConversationId] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
@@ -55,18 +58,36 @@ export const ChatProvider = ({ children }) => {
     ));
   };
 
-  const addMessage = (message) => {
+  const addMessage = async (message) => {
     if (!activeConversationId) return;
+
+    // Send message to LLM provider
+    try {
+      setIsTyping(true);
+      const response = await sendMessage(
+        message.content,
+        settings.defaultProviderId,
+        settings.apiKeys
+      );
+
+      message.content = response.content;
+    } catch (error) {
+      console.error('Error sending message:', error);
+      message.content = `Error: ${error.message || 'Failed to send message'}`;
+    } finally {
+      setIsTyping(false);
+    }
 
     setConversations(prev => prev.map(conv => {
       if (conv.id === activeConversationId) {
         return {
           ...conv,
-          messages: [...conv.messages, message]
+          messages: [...conv.messages, message],
         };
       }
       return conv;
     }));
+    scrollToBottom();
   };
 
   const activeConversation = conversations.find(conv => conv.id === activeConversationId);
@@ -82,7 +103,8 @@ export const ChatProvider = ({ children }) => {
       deleteConversation,
       updateConversationTitle,
       addMessage,
-      setIsTyping
+      setIsTyping,
+      scrollToBottom
     }}>
       {children}
     </ChatContext.Provider>

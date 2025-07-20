@@ -10,6 +10,7 @@ import {ThemeProvider} from './contexts/ThemeContext';
 import {ChatProvider} from './contexts/ChatContext';
 import {SettingsProvider} from './contexts/SettingsContext';
 import './App.css';
+import { testApiConnection } from './services/apiService';
 
 const {FiMessageSquare,FiBarChart2,FiSettings,FiList,FiSun,FiMoon,FiMenu,FiX,FiChevronLeft,FiChevronRight}=FiIcons;
 
@@ -91,6 +92,21 @@ function App() {
       }
     }
   };
+
+  useEffect(() => {
+    const testOllama = async () => {
+      try {
+        const result = await testApiConnection('ollama', settings.apiKeys?.ollama?.value);
+        console.log('Ollama connection test result:', result);
+      } catch (error) {
+        console.error('Error testing Ollama connection:', error);
+      }
+    };
+
+    if (settings && settings.defaultProviderId === 'ollama' && settings.apiKeys?.ollama?.value) {
+      testOllama();
+    }
+  }, [settings.defaultProviderId, settings.apiKeys, settings]);
 
   return (
     <ThemeProvider theme={theme} setTheme={setTheme}>
