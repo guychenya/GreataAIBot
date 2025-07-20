@@ -46,15 +46,15 @@ export const ChatProvider = ({ children }) => {
   };
 
   const deleteConversation = (id) => {
-    setConversations(prev => prev.filter(conv => conv.id !== id));
+    setConversations(prev => prev.filter(conversation => conversation.id !== id));
     if (activeConversationId === id) {
       setActiveConversationId(null);
     }
   };
 
   const updateConversationTitle = (id, newTitle) => {
-    setConversations(prev => prev.map(conv => 
-      conv.id === id ? { ...conv, title: newTitle } : conv
+    setConversations(prev => prev.map(conversation => 
+      conversation.id === id ? { ...conversation, title: newTitle } : conversation
     ));
   };
 
@@ -78,14 +78,14 @@ export const ChatProvider = ({ children }) => {
       setIsTyping(false);
     }
 
-    setConversations(prev => prev.map(conv => {
-      if (conv.id === activeConversationId) {
+    setConversations(prev => prev.map(conversation => {
+      if (conversation.id === activeConversationId) {
         return {
-          ...conv,
-          messages: [...conv.messages, message],
+          ...conversation,
+          messages: [...conversation.messages, message],
         };
       }
-      return conv;
+      return conversation;
     }));
     scrollToBottom();
   };
@@ -99,7 +99,7 @@ export const ChatProvider = ({ children }) => {
     }, 0);
   };
 
-  const activeConversation = conversations.find(conv => conv.id === activeConversationId);
+  const activeConversation = conversations.find(conversation => conversation.id === activeConversationId);
 
   return (
     <ChatContext.Provider value={{
