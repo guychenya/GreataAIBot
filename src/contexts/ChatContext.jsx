@@ -90,6 +90,15 @@ export const ChatProvider = ({ children }) => {
     scrollToBottom();
   };
 
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      const chatContainer = document.querySelector('.chat-area');
+      if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+    }, 0);
+  };
+
   const activeConversation = conversations.find(conv => conv.id === activeConversationId);
 
   return (

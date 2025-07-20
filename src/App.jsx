@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,useContext} from 'react';
 import * as FiIcons from 'react-icons/fi';
 import SafeIcon from './common/SafeIcon';
 import Sidebar from './components/Sidebar';
@@ -8,13 +8,14 @@ import Dashboard from './components/Dashboard';
 import SettingsPanel from './components/SettingsPanel';
 import {ThemeProvider} from './contexts/ThemeContext';
 import {ChatProvider} from './contexts/ChatContext';
-import {SettingsProvider} from './contexts/SettingsContext';
+import {SettingsProvider,SettingsContext} from './contexts/SettingsContext';
 import './App.css';
 import { testApiConnection } from './services/apiService';
 
 const {FiMessageSquare,FiBarChart2,FiSettings,FiList,FiSun,FiMoon,FiMenu,FiX,FiChevronLeft,FiChevronRight}=FiIcons;
 
 function App() {
+  const { settings } = useContext(SettingsContext);
   const [activeView,setActiveView]=useState('chat');
   const [leftPanelCollapsed,setLeftPanelCollapsed]=useState(false);
   const [rightPanelCollapsed,setRightPanelCollapsed]=useState(true);
@@ -106,7 +107,7 @@ function App() {
     if (settings && settings.defaultProviderId === 'ollama' && settings.apiKeys?.ollama?.value) {
       testOllama();
     }
-  }, [settings.defaultProviderId, settings.apiKeys, settings]);
+  }, [settings]);
 
   return (
     <ThemeProvider theme={theme} setTheme={setTheme}>
